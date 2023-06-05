@@ -2,6 +2,7 @@ extern crate gtk;
 use gtk::prelude::*;
 
 use gtk::{Window, WindowType, Grid, Label,Button, Box};
+use reqwest;
 
 pub fn ui() -> Window {
     let main_window = Window::new(WindowType::Toplevel);
@@ -39,5 +40,18 @@ pub fn ui() -> Window {
     });
 
     main_window
+
+}
+
+pub async fn fetch_api(url: String){
+    let resp = reqwest::get(url).await.expect("request failed");
+    assert!(resp.status().is_success());
+    let json_data: serde_json::Value = resp
+    .json()
+    .await
+    .expect("failed to parse JSON response");
+
+println!("{:?}", json_data);
+
 
 }
